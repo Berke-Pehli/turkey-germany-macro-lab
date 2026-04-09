@@ -13,5 +13,6 @@ INSERT INTO macro_lab.dim_source (
 VALUES
     ('EUROSTAT', 'Eurostat', 'api', 'https://ec.europa.eu/eurostat'),
     ('ECB', 'European Central Bank', 'api', 'https://data.ecb.europa.eu'),
-    ('EVDS', 'Central Bank of the Republic of Türkiye EVDS', 'api', 'https://evds2.tcmb.gov.tr')
+    ('EVDS', 'Central Bank of the Republic of Türkiye EVDS', 'api', 'https://evds2.tcmb.gov.tr'),
+    ('CBRT', 'Central Bank of the Republic of Türkiye', 'api', 'https://www.tcmb.gov.tr')
 ON CONFLICT (source_code) DO NOTHING;
