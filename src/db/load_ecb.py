@@ -1,6 +1,6 @@
-"""Load normalized Eurostat data into PostgreSQL fact tables.
+"""Load normalized ECB data into PostgreSQL fact tables.
 
-This module reads the normalized Eurostat parquet output, maps business keys
+This module reads the normalized ECB parquet output, maps business keys
 to database dimension IDs, and prepares rows for insertion into
 `macro_lab.fact_macro_observation`.
 """
@@ -10,7 +10,6 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import pandas as pd
-from sqlalchemy import text
 
 from src.config.logging_config import get_logger
 from src.config.settings import FINAL_DATA_DIR
@@ -21,13 +20,13 @@ from src.db.io import write_dataframe_to_table
 logger = get_logger(__name__)
 
 
-def load_normalized_eurostat() -> pd.DataFrame:
-    """Load normalized Eurostat parquet data from the final data layer.
+def load_normalized_ecb() -> pd.DataFrame:
+    """Load normalized ECB parquet data from the final data layer.
 
     Returns:
-        A pandas DataFrame containing normalized Eurostat observations.
+        A pandas DataFrame containing normalized ECB observations.
     """
-    input_path = FINAL_DATA_DIR / "eurostat" / "eurostat_normalized.parquet"
+    input_path = FINAL_DATA_DIR / "ecb" / "ecb_normalized.parquet"
     return pd.read_parquet(input_path)
 
 
@@ -45,10 +44,10 @@ def fetch_dimension_lookup(query: str) -> pd.DataFrame:
 
 
 def prepare_fact_macro_observation_rows(df: pd.DataFrame) -> pd.DataFrame:
-    """Map normalized Eurostat rows to fact table structure.
+    """Map normalized ECB rows to fact table structure.
 
     Args:
-        df: Normalized Eurostat DataFrame with business key columns.
+        df: Normalized ECB DataFrame with business key columns.
 
     Returns:
         A DataFrame structured for insertion into `fact_macro_observation`.
@@ -130,13 +129,13 @@ def load_fact_macro_observation(df: pd.DataFrame) -> None:
 
 
 def main() -> None:
-    """Run the normalized Eurostat load process."""
-    normalized_df = load_normalized_eurostat()
+    """Run the normalized ECB load process."""
+    normalized_df = load_normalized_ecb()
     prepared_df = prepare_fact_macro_observation_rows(normalized_df)
     validate_prepared_fact_rows(prepared_df)
     load_fact_macro_observation(prepared_df)
 
-    logger.info("Eurostat load complete.")
+    logger.info("ECB load complete.")
     logger.info("Prepared rows: %s", len(prepared_df))
     logger.info("Preview:\n%s", prepared_df.head())
 
