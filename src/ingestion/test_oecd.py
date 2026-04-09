@@ -14,16 +14,15 @@ logger = get_logger(__name__)
 
 
 def main() -> None:
-    """Fetch, parse, and save OECD CPI data for Türkiye."""
+    """Fetch, parse, and save OECD industrial production data for Türkiye."""
     query_url = (
         "https://sdmx.oecd.org/public/rest/data/"
-        "OECD.SDD.TPS,DSD_PRICES@DF_PRICES_ALL,1.0/"
-        ".M.N.CPI.._T.N.GY+_Z"
-        "?startPeriod=2021-10"
-        "&dimensionAtObservation=AllDimensions"
+        "OECD.SDD.STES,DSD_STES@DF_INDSERV,4.3/"
+        "TUR.M.PRVM......"
+        "?dimensionAtObservation=AllDimensions"
         "&format=jsondata"
     )
-    file_stub = "oecd_turkiye_cpi"
+    file_stub = "oecd_turkiye_industrial_production"
 
     raw_data = fetch_oecd_json_from_url(query_url)
 
