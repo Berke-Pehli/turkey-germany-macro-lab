@@ -7,15 +7,18 @@ processing and database loading.
 
 Current scope:
     - Fetch raw HICP inflation data from Eurostat for Germany and the euro area
-    - Save the raw JSON response to `data/raw/eurostat/`
-    - Parse the filtered JSON response into a tidy DataFrame
-    - Save the processed DataFrame to `data/processed/eurostat/`
+    - Fetch raw unemployment data from Eurostat for Germany and the euro area
+    - Save raw JSON responses to `data/raw/eurostat/`
+    - Parse filtered JSON responses into tidy pandas DataFrames
+    - Save processed DataFrames to `data/processed/eurostat/`
 
 Project output paths used by this module:
     - Raw JSON:
         data/raw/eurostat/prc_hicp_manr_raw.json
+        data/raw/eurostat/une_rt_m_raw.json
     - Processed parquet:
         data/processed/eurostat/prc_hicp_manr.parquet
+        data/processed/eurostat/une_rt_m.parquet
 """
 
 from __future__ import annotations
@@ -282,6 +285,170 @@ def save_hicp_inflation_processed(df: pd.DataFrame) -> Path:
         analysis, and database loading steps.
     """
     output_path = PROCESSED_DATA_DIR / "eurostat" / "prc_hicp_manr.parquet"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(output_path, index=False)
+    logger.info("Saved processed Eurostat parquet to %s", output_path)
+    return output_path
+
+
+def fetch_unemployment_raw() -> dict:
+    """Fetch raw unemployment data for Germany and the euro area.
+
+    This request is filtered to retrieve monthly unemployment rates for
+    Germany and the euro area from Eurostat.
+
+    Dataset:
+        une_rt_m
+
+    Filters:
+        - s_adj=SA: seasonally adjusted
+        - unit=PC_ACT: percentage of active population
+        - age=TOTAL: total age group
+        - sex=T: total sex
+        - geo=DE and geo=EA: Germany and euro area
+
+    Returns:
+        Parsed Eurostat JSON response.
+
+    Notes:
+        This function only returns the raw JSON response. To save the raw
+        output locally, use `save_unemployment_raw`.
+    """
+    params = [
+        ("s_adj", "SA"),
+        ("unit", "PC_ACT"),
+        ("age", "TOTAL"),
+        ("sex", "T"),
+        ("geo", "DE"),
+        ("geo", "EA"),
+    ]
+
+    return fetch_eurostat_json(
+        dataset_code="une_rt_m",
+        params=params,
+    )
+
+
+def save_unemployment_raw(data: dict) -> Path:
+    """Save raw unemployment data to the project raw data folder.
+
+    Args:
+        data: Parsed Eurostat JSON response for the filtered unemployment request.
+
+    Returns:
+        Path to the saved raw JSON file.
+
+    Output location:
+        data/raw/eurostat/une_rt_m_raw.json
+    """
+    output_path = RAW_DATA_DIR / "eurostat" / "une_rt_m_raw.json"
+    save_raw_eurostat_json(data, output_path)
+    return output_path
+
+
+def parse_unemployment_json(data: dict) -> pd.DataFrame:
+    """Parse raw Eurostat unemployment JSON into a tidy DataFrame.
+
+    This parser is tailored to the filtered `une_rt_m` request used in
+    this project. It extracts Germany and euro area unemployment values
+    by time from the Eurostat JSON structure and returns a row-based table.
+
+    Args:
+        data: Raw Eurostat JSON response.
+
+    Returns:
+        A tidy pandas DataFrame with one row per country and month.
+
+    Raises:
+        KeyError: If expected Eurostat JSON keys are missing.
+
+    Output columns:
+        - dataset_code
+        - country_code
+        - time_period
+        - unit
+        - sex
+        - age
+        - s_adj
+        - value
+    """
+    dataset_code = "une_rt_m"
+
+    id_order = data["id"]
+    size = data["size"]
+    values = data["value"]
+    dimensions = data["dimension"]
+
+    position_maps: dict[str, dict[int, str]] = {}
+    for dim_name in id_order:
+        category_index = dimensions[dim_name]["category"]["index"]
+        reverse_map = {position: label for label, position in category_index.items()}
+        position_maps[dim_name] = reverse_map
+
+    rows: list[dict[str, object]] = []
+
+    for flat_index_str, value in values.items():
+        flat_index = int(flat_index_str)
+        remainder = flat_index
+        positions: list[int] = []
+
+        for dim_size in reversed(size):
+            positions.append(remainder % dim_size)
+            remainder //= dim_size
+
+        positions.reverse()
+
+        row = {
+            "dataset_code": dataset_code,
+            "value": value,
+        }
+
+        for dim_name, pos in zip(id_order, positions):
+            row[dim_name] = position_maps[dim_name][pos]
+
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+
+    rename_map = {
+        "geo": "country_code",
+        "time": "time_period",
+    }
+    df = df.rename(columns=rename_map)
+
+    column_order = [
+        "dataset_code",
+        "country_code",
+        "time_period",
+        "unit",
+        "sex",
+        "age",
+        "s_adj",
+        "value",
+    ]
+
+    existing_columns = [col for col in column_order if col in df.columns]
+
+    return (
+        df[existing_columns]
+        .sort_values(by=["country_code", "time_period"])
+        .reset_index(drop=True)
+    )
+
+
+def save_unemployment_processed(df: pd.DataFrame) -> Path:
+    """Save processed unemployment data to the project processed data folder.
+
+    Args:
+        df: Processed tidy unemployment DataFrame.
+
+    Returns:
+        Path to the saved parquet file.
+
+    Output location:
+        data/processed/eurostat/une_rt_m.parquet
+    """
+    output_path = PROCESSED_DATA_DIR / "eurostat" / "une_rt_m.parquet"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(output_path, index=False)
     logger.info("Saved processed Eurostat parquet to %s", output_path)
