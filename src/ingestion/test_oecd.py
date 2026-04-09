@@ -9,20 +9,18 @@ from src.ingestion.oecd import (
     save_raw_oecd_json,
 )
 
-
 logger = get_logger(__name__)
 
 
 def main() -> None:
-    """Fetch, parse, and save OECD industrial production data for Türkiye."""
+    """Fetch, parse, and save OECD consumer confidence data for the euro area."""
     query_url = (
         "https://sdmx.oecd.org/public/rest/data/"
-        "OECD.SDD.STES,DSD_STES@DF_INDSERV,4.3/"
-        "TUR.M.PRVM......"
+        "OECD.SDD.STES,DSD_STES@DF_CLI,/EA20.M.LI...AA...H"
         "?dimensionAtObservation=AllDimensions"
         "&format=jsondata"
     )
-    file_stub = "oecd_turkiye_industrial_production"
+    file_stub = "oecd_euro_area_consumer_confidence"
 
     raw_data = fetch_oecd_json_from_url(query_url)
 

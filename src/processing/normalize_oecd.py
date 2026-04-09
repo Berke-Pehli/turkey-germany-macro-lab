@@ -111,3 +111,153 @@ def normalize_oecd_turkiye_industrial_production() -> pd.DataFrame:
         raise ValueError("Duplicate observation_date values remain in normalized industrial production data.")
 
     return normalized
+
+
+def normalize_oecd_turkiye_business_confidence() -> pd.DataFrame:
+    """Normalize processed OECD Türkiye business confidence data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_turkiye_business_confidence.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "TUR"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "BCICP"].copy()
+    df = df[df["UNIT_MEASURE"] == "IX"].copy()
+    df = df[df["TIME_PERIOD"].notna()].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "TR",
+            "indicator_code": "sentiment_index",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    normalized = normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+    if normalized.duplicated(subset=["observation_date"]).any():
+        raise ValueError("Duplicate observation_date values remain in normalized business confidence data.")
+
+    return normalized
+
+
+def normalize_oecd_germany_business_confidence() -> pd.DataFrame:
+    """Normalize processed OECD Germany business confidence data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_germany_business_confidence.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "DEU"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "BCICP"].copy()
+    df = df[df["UNIT_MEASURE"] == "IX"].copy()
+    df = df[df["TIME_PERIOD"].notna()].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "DE",
+            "indicator_code": "sentiment_index",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    normalized = normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+    if normalized.duplicated(subset=["observation_date"]).any():
+        raise ValueError("Duplicate observation_date values remain in normalized Germany business confidence data.")
+
+    return normalized
+
+
+def normalize_oecd_euro_area_business_confidence() -> pd.DataFrame:
+    """Normalize processed OECD euro area business confidence data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_euro_area_business_confidence.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "EA20"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "BCICP"].copy()
+    df = df[df["UNIT_MEASURE"] == "IX"].copy()
+    df = df[df["TIME_PERIOD"].notna()].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "EA",
+            "indicator_code": "sentiment_index",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    normalized = normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+    if normalized.duplicated(subset=["observation_date"]).any():
+        raise ValueError("Duplicate observation_date values remain in normalized euro area business confidence data.")
+
+    return normalized
+
+
+def normalize_oecd_turkiye_consumer_confidence() -> pd.DataFrame:
+    """Normalize processed OECD Türkiye consumer confidence data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_turkiye_consumer_confidence.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "TUR"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "LI"].copy()
+    df = df[df["UNIT_MEASURE"] == "IX"].copy()
+    df = df[df["TIME_PERIOD"].notna()].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "TR",
+            "indicator_code": "consumer_confidence_index",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    normalized = normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+    if normalized.duplicated(subset=["observation_date"]).any():
+        raise ValueError("Duplicate observation_date values remain in normalized Türkiye consumer confidence data.")
+
+    return normalized
+
+
+def normalize_oecd_germany_consumer_confidence() -> pd.DataFrame:
+    """Normalize processed OECD Germany consumer confidence data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_germany_consumer_confidence.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "DEU"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "LI"].copy()
+    df = df[df["UNIT_MEASURE"] == "IX"].copy()
+    df = df[df["TIME_PERIOD"].notna()].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "DE",
+            "indicator_code": "consumer_confidence_index",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    normalized = normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+    if normalized.duplicated(subset=["observation_date"]).any():
+        raise ValueError("Duplicate observation_date values remain in normalized Germany consumer confidence data.")
+
+    return normalized

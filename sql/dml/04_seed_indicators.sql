@@ -21,7 +21,7 @@ VALUES
         'M',
         'percent',
         'inflation',
-        'Used for Germany and euro area directly; Türkiye mapping may later come from EVDS in ingestion.'
+        'Used for Germany and euro area directly; Türkiye mapping now comes from OECD ingestion.'
     ),
     (
         'unemployment_rate',
@@ -71,10 +71,19 @@ VALUES
     (
         'sentiment_index',
         'Sentiment Index',
-        (SELECT source_id FROM macro_lab.dim_source WHERE source_code = 'EUROSTAT'),
+        (SELECT source_id FROM macro_lab.dim_source WHERE source_code = 'OECD'),
         'M',
         'index',
         'sentiment',
-        'Monthly sentiment/confidence indicator.'
+        'Monthly business confidence indicator from OECD.'
+    ),
+    (
+        'consumer_confidence_index',
+        'Consumer Confidence Index',
+        (SELECT source_id FROM macro_lab.dim_source WHERE source_code = 'OECD'),
+        'M',
+        'index',
+        'sentiment',
+        'Monthly consumer confidence indicator from OECD.'
     )
 ON CONFLICT (indicator_code) DO NOTHING;
