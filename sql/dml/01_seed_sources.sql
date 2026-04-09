@@ -1,2 +1,17 @@
--- Seed source dimension values such as ECB, EUROSTAT, and EVDS.
--- Full inserts will be added in the next implementation step.
+-- -----------------------------------------------------------------------------
+-- File: 01_seed_sources.sql
+-- Purpose:
+--     Seed data sources used in the macro lab project.
+-- -----------------------------------------------------------------------------
+
+INSERT INTO macro_lab.dim_source (
+    source_code,
+    source_name,
+    source_type,
+    base_url
+)
+VALUES
+    ('EUROSTAT', 'Eurostat', 'api', 'https://ec.europa.eu/eurostat'),
+    ('ECB', 'European Central Bank', 'api', 'https://data.ecb.europa.eu'),
+    ('EVDS', 'Central Bank of the Republic of Türkiye EVDS', 'api', 'https://evds2.tcmb.gov.tr')
+ON CONFLICT (source_code) DO NOTHING;
