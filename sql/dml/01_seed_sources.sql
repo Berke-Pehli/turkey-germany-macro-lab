@@ -1,0 +1,2 @@
+-- Seed source dimension values such as ECB, EUROSTAT, and EVDS.
+-- Full inserts will be added in the next implementation step.

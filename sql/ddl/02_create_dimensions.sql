@@ -1,0 +1,2 @@
+-- Create dimension tables for sources, countries, frequencies, and indicators.
+-- Full definitions will be added in the next implementation step.

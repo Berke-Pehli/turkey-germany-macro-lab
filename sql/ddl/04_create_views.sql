@@ -1,0 +1,2 @@
+-- Create reusable analytical and reporting views.
+-- Full definitions will be added in the next implementation step.

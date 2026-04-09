@@ -1,0 +1,3 @@
+-- Create fact and log tables for macro observations, features, forecasts,
+-- model runs, and pipeline runs.
+-- Full definitions will be added in the next implementation step.

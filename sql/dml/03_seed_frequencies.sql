@@ -1,0 +1,2 @@
+-- Seed supported frequencies such as daily and monthly.
+-- Full inserts will be added in the next implementation step.

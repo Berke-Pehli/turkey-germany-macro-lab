@@ -1,0 +1,2 @@
+-- Seed country/entity dimension values such as TR, DE, and EA.
+-- Full inserts will be added in the next implementation step.

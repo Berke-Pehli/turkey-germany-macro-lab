@@ -1,0 +1,2 @@
+-- Seed core macro indicator metadata.
+-- Full inserts will be added in the next implementation step.
