@@ -1,10 +1,10 @@
-"""Inspect Türkiye model input parquet for first modeling setup.
+"""Inspect euro area model input parquet for first modeling setup.
 
-This script loads the exported Türkiye model-input parquet file and checks
+This script loads the exported euro area model-input parquet file and checks
 its structure, date coverage, and missingness before baseline modeling.
 
 Current purpose:
-    - verify that the Türkiye model-input export is ready for the first
+    - verify that the euro area model-input export is ready for the first
       baseline forecasting workflow
 """
 
@@ -20,11 +20,11 @@ logger = get_logger(__name__)
 
 
 def main() -> None:
-    """Load and inspect the Türkiye model input dataset."""
-    input_path = FINAL_DATA_DIR / "model_inputs" / "model_input_tr_v1.parquet"
+    """Load and inspect the euro area model input dataset."""
+    input_path = FINAL_DATA_DIR / "model_inputs" / "model_input_ea_v1.parquet"
     df = pd.read_parquet(input_path)
 
-    logger.info("Loaded Türkiye model input rows: %s", len(df))
+    logger.info("Loaded euro area model input rows: %s", len(df))
     logger.info("Loaded columns: %s", list(df.columns))
     logger.info("Date range: %s to %s", df["year_month"].min(), df["year_month"].max())
     logger.info("Preview:\n%s", df.head())
