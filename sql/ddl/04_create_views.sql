@@ -29,7 +29,8 @@ SELECT
     MAX(CASE WHEN i.indicator_code = 'policy_rate' THEN f.observation_value END) AS policy_rate,
     MAX(CASE WHEN i.indicator_code = 'try_eur_eom' THEN f.observation_value END) AS try_eur_eom,
     MAX(CASE WHEN i.indicator_code = 'try_usd_eom' THEN f.observation_value END) AS try_usd_eom,
-    MAX(CASE WHEN i.indicator_code = 'sentiment_index' THEN f.observation_value END) AS sentiment_index
+    MAX(CASE WHEN i.indicator_code = 'sentiment_index' THEN f.observation_value END) AS sentiment_index,
+    MAX(CASE WHEN i.indicator_code = 'consumer_confidence_index' THEN f.observation_value END) AS consumer_confidence_index
 FROM macro_lab.fact_macro_observation f
 JOIN macro_lab.dim_country c
     ON f.country_id = c.country_id
@@ -65,7 +66,8 @@ SELECT
     policy_rate,
     try_eur_eom,
     try_usd_eom,
-    sentiment_index
+    sentiment_index,
+    consumer_confidence_index
 FROM ranked_snapshot
 WHERE row_num = 1;
 

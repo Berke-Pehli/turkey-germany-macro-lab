@@ -261,3 +261,113 @@ def normalize_oecd_germany_consumer_confidence() -> pd.DataFrame:
         raise ValueError("Duplicate observation_date values remain in normalized Germany consumer confidence data.")
 
     return normalized
+
+
+def normalize_oecd_euro_area_unemployment() -> pd.DataFrame:
+    """Normalize processed OECD euro area unemployment data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_euro_area_unemployment.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "EA"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "UNE_LF_M"].copy()
+    df = df[df["ADJUSTMENT"] == "Y"].copy()
+    df = df[df["SEX"] == "_T"].copy()
+    df = df[df["AGE"] == "Y_GE15"].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "EA",
+            "indicator_code": "unemployment_rate",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    return normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+
+def normalize_oecd_germany_industrial_production() -> pd.DataFrame:
+    """Normalize processed OECD Germany industrial production data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_germany_industrial_production.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "DEU"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "PRVM"].copy()
+    df = df[df["UNIT_MEASURE"] == "IX"].copy()
+    df = df[df["ACTIVITY"] == "C"].copy()
+    df = df[df["ADJUSTMENT"] == "Y"].copy()
+    df = df[df["TRANSFORMATION"] == "_Z"].copy()
+    df = df[df["TIME_HORIZ"] == "_Z"].copy()
+    df = df[df["METHODOLOGY"] == "N"].copy()
+    df = df[df["TIME_PERIOD"].notna()].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "DE",
+            "indicator_code": "industrial_production_index",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    normalized = normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+    if normalized.duplicated(subset=["observation_date"]).any():
+        duplicate_dates = normalized.loc[
+            normalized.duplicated(subset=["observation_date"], keep=False),
+            ["observation_date", "observation_value"],
+        ].sort_values("observation_date")
+        raise ValueError(
+            "Duplicate observation_date values remain in normalized Germany industrial production data.\n"
+            f"{duplicate_dates.head(20)}"
+        )
+
+    return normalized
+
+
+def normalize_oecd_euro_area_industrial_production() -> pd.DataFrame:
+    """Normalize processed OECD euro area industrial production data into project-standard format."""
+    input_path = PROCESSED_DATA_DIR / "oecd" / "oecd_euro_area_industrial_production.parquet"
+    df = _load_processed_parquet(input_path).copy()
+
+    df = df[df["REF_AREA"] == "EA20"].copy()
+    df = df[df["FREQ"] == "M"].copy()
+    df = df[df["MEASURE"] == "PRVM"].copy()
+    df = df[df["UNIT_MEASURE"] == "IX"].copy()
+    df = df[df["ACTIVITY"] == "C"].copy()
+    df = df[df["ADJUSTMENT"] == "Y"].copy()
+    df = df[df["TRANSFORMATION"] == "_Z"].copy()
+    df = df[df["TIME_HORIZ"] == "_Z"].copy()
+    df = df[df["METHODOLOGY"] == "N"].copy()
+    df = df[df["TIME_PERIOD"].notna()].copy()
+
+    normalized = pd.DataFrame(
+        {
+            "source_code": "OECD",
+            "country_code": "EA",
+            "indicator_code": "industrial_production_index",
+            "frequency_code": "M",
+            "observation_date": pd.to_datetime(df["TIME_PERIOD"]).dt.to_period("M").dt.to_timestamp(),
+            "observation_value": df["value"].astype(float),
+        }
+    )
+
+    normalized = normalized.sort_values(by=["observation_date"]).reset_index(drop=True)
+
+    if normalized.duplicated(subset=["observation_date"]).any():
+        duplicate_dates = normalized.loc[
+            normalized.duplicated(subset=["observation_date"], keep=False),
+            ["observation_date", "observation_value"],
+        ].sort_values("observation_date")
+        raise ValueError(
+            "Duplicate observation_date values remain in normalized euro area industrial production data.\n"
+            f"{duplicate_dates.head(20)}"
+        )
+
+    return normalized

@@ -3,8 +3,11 @@
 from src.config.logging_config import get_logger
 from src.processing.normalize_oecd import (
     normalize_oecd_euro_area_business_confidence,
+    normalize_oecd_euro_area_industrial_production,
+    normalize_oecd_euro_area_unemployment,
     normalize_oecd_germany_business_confidence,
     normalize_oecd_germany_consumer_confidence,
+    normalize_oecd_germany_industrial_production,
     normalize_oecd_turkiye_business_confidence,
     normalize_oecd_turkiye_consumer_confidence,
     normalize_oecd_turkiye_cpi,
@@ -31,10 +34,28 @@ def main() -> None:
         file_name="oecd_turkiye_unemployment_normalized",
     )
 
+    euro_area_unemployment_df = normalize_oecd_euro_area_unemployment()
+    euro_area_unemployment_output_path = save_oecd_normalized(
+        euro_area_unemployment_df,
+        file_name="oecd_euro_area_unemployment_normalized",
+    )
+
     industrial_df = normalize_oecd_turkiye_industrial_production()
     industrial_output_path = save_oecd_normalized(
         industrial_df,
         file_name="oecd_turkiye_industrial_production_normalized",
+    )
+
+    germany_industrial_df = normalize_oecd_germany_industrial_production()
+    germany_industrial_output_path = save_oecd_normalized(
+        germany_industrial_df,
+        file_name="oecd_germany_industrial_production_normalized",
+    )
+
+    euro_area_industrial_df = normalize_oecd_euro_area_industrial_production()
+    euro_area_industrial_output_path = save_oecd_normalized(
+        euro_area_industrial_df,
+        file_name="oecd_euro_area_industrial_production_normalized",
     )
 
     confidence_df = normalize_oecd_turkiye_business_confidence()
@@ -76,6 +97,19 @@ def main() -> None:
     logger.info("Unemployment preview:\n%s", unemployment_df.head())
 
     logger.info(
+        "Normalized OECD euro area unemployment rows: %s",
+        len(euro_area_unemployment_df),
+    )
+    logger.info(
+        "Saved euro area unemployment normalized file: %s",
+        euro_area_unemployment_output_path,
+    )
+    logger.info(
+        "Euro area unemployment preview:\n%s",
+        euro_area_unemployment_df.head(),
+    )
+
+    logger.info(
         "Normalized OECD Türkiye industrial production rows: %s",
         len(industrial_df),
     )
@@ -84,6 +118,32 @@ def main() -> None:
         industrial_output_path,
     )
     logger.info("Industrial production preview:\n%s", industrial_df.head())
+
+    logger.info(
+        "Normalized OECD Germany industrial production rows: %s",
+        len(germany_industrial_df),
+    )
+    logger.info(
+        "Saved Germany industrial production normalized file: %s",
+        germany_industrial_output_path,
+    )
+    logger.info(
+        "Germany industrial production preview:\n%s",
+        germany_industrial_df.head(),
+    )
+
+    logger.info(
+        "Normalized OECD euro area industrial production rows: %s",
+        len(euro_area_industrial_df),
+    )
+    logger.info(
+        "Saved euro area industrial production normalized file: %s",
+        euro_area_industrial_output_path,
+    )
+    logger.info(
+        "Euro area industrial production preview:\n%s",
+        euro_area_industrial_df.head(),
+    )
 
     logger.info(
         "Normalized OECD Türkiye business confidence rows: %s",
@@ -103,7 +163,10 @@ def main() -> None:
         "Saved Germany business confidence normalized file: %s",
         germany_confidence_output_path,
     )
-    logger.info("Germany business confidence preview:\n%s", germany_confidence_df.head())
+    logger.info(
+        "Germany business confidence preview:\n%s",
+        germany_confidence_df.head(),
+    )
 
     logger.info(
         "Normalized OECD euro area business confidence rows: %s",
@@ -113,7 +176,10 @@ def main() -> None:
         "Saved euro area business confidence normalized file: %s",
         euro_area_confidence_output_path,
     )
-    logger.info("Euro area business confidence preview:\n%s", euro_area_confidence_df.head())
+    logger.info(
+        "Euro area business confidence preview:\n%s",
+        euro_area_confidence_df.head(),
+    )
 
     logger.info(
         "Normalized OECD Türkiye consumer confidence rows: %s",
@@ -123,7 +189,10 @@ def main() -> None:
         "Saved Türkiye consumer confidence normalized file: %s",
         consumer_confidence_output_path,
     )
-    logger.info("Türkiye consumer confidence preview:\n%s", consumer_confidence_df.head())
+    logger.info(
+        "Türkiye consumer confidence preview:\n%s",
+        consumer_confidence_df.head(),
+    )
 
     logger.info(
         "Normalized OECD Germany consumer confidence rows: %s",
@@ -133,7 +202,10 @@ def main() -> None:
         "Saved Germany consumer confidence normalized file: %s",
         germany_consumer_confidence_output_path,
     )
-    logger.info("Germany consumer confidence preview:\n%s", germany_consumer_confidence_df.head())
+    logger.info(
+        "Germany consumer confidence preview:\n%s",
+        germany_consumer_confidence_df.head(),
+    )
 
 
 if __name__ == "__main__":
