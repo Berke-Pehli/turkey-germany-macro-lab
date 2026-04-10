@@ -1,0 +1,7 @@
+evaluation,country,best_model_mae,best_model_rmse,main_interpretation
+fixed_split,DE,naive,naive,Naive benchmark outperformed linear and ridge models.
+fixed_split,EA,linear_regression,linear_regression,Linear regression improved on the naive benchmark.
+fixed_split,TR,naive,naive,Naive benchmark outperformed linear and ridge models.
+rolling,DE,linear_regression,linear_regression,Linear regression clearly improved on the naive benchmark.
+rolling,EA,linear_regression,linear_regression,Linear regression clearly improved on the naive benchmark.
+rolling,TR,linear_regression,naive,"Mixed result: linear regression improved MAE, but naive remained better on RMSE."

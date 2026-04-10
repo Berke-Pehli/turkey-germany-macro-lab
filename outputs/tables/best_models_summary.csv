@@ -1,0 +1,13 @@
+evaluation,country,metric,best_model,metric_value
+fixed_split,DE,mae,naive,0.775904
+fixed_split,DE,rmse,naive,1.077816
+fixed_split,EA,mae,linear_regression,0.556241
+fixed_split,EA,rmse,linear_regression,0.758246
+fixed_split,TR,mae,naive,5.150353
+fixed_split,TR,rmse,naive,8.108454
+rolling,DE,mae,linear_regression,0.5881
+rolling,DE,rmse,linear_regression,0.8308
+rolling,EA,mae,linear_regression,0.4513
+rolling,EA,rmse,linear_regression,0.6153
+rolling,TR,mae,linear_regression,3.8648
+rolling,TR,rmse,naive,6.6393

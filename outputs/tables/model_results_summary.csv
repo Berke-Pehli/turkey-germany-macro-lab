@@ -1,0 +1,16 @@
+country,evaluation,model,mae,rmse
+TR,fixed_split,naive,5.150353,8.108454
+TR,fixed_split,linear_regression,5.39859,8.234951
+TR,fixed_split,ridge,5.4033,8.2432
+DE,fixed_split,naive,0.775904,1.077816
+DE,fixed_split,linear_regression,0.82986,1.225512
+DE,fixed_split,ridge,0.8459,1.2446
+EA,fixed_split,naive,0.595181,0.812256
+EA,fixed_split,linear_regression,0.556241,0.758246
+EA,fixed_split,ridge,0.5573,0.7631
+TR,rolling,naive,3.8966,6.6393
+TR,rolling,linear_regression,3.8648,6.7155
+DE,rolling,naive,0.6346,0.9124
+DE,rolling,linear_regression,0.5881,0.8308
+EA,rolling,naive,0.4877,0.6895
+EA,rolling,linear_regression,0.4513,0.6153
